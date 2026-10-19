@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eksplorasi Geofisika & Seismologi</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --accent-primary: #38bdf8;
+            --accent-secondary: #f43f5e;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 50px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border-bottom: 1px solid var(--border-color);
+            padding: 2rem 1rem;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            color: var(--accent-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        section {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: var(--accent-primary);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: #cbd5e1;
+        }
+
+        /* Simulasi Gempa */
+        .sim-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        canvas {
+            background: #000;
+            border-radius: 8px;
+            width: 100%;
+            height: 250px;
+            border: 1px solid var(--border-color);
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        button {
+            background-color: var(--accent-primary);
+            color: #0f172a;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        button.secondary {
+            background-color: var(--accent-secondary);
+            color: white;
+        }
+
+        /* Kalkulator Ketebalan Lapisan */
+        .calc-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        @media(max-width: 768px) {
+            .calc-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .input-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 0.3rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.7rem;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            color: white;
+            border-radius: 6px;
+        }
+
+        .result-box {
+            background: var(--bg-color);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px dashed var(--accent-primary);
+            margin-top: 1rem;
+        }
+
+        /* Kuis */
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .quiz-btn {
+            background: var(--bg-color);
+            color: white;
+            border: 1px solid var(--border-color);
+            text-align: left;
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .quiz-btn:hover {
+            border-color: var(--accent-primary);
+        }
+
+        footer {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 3rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Eksplorasi Geofisika</h1>
+        <p>Mengenal Struktur Bumi, Gelombang Seismik, dan Metode Eksplorasi</p>
+    </header>
+
+    <div class="container">
+        <!-- Pengantar -->
+        <section>
+            <h2>Apa itu Geofisika?</h2>
+            <p>Geofisika adalah bagian dari ilmu bumi (earth science) yang mempelajari bumi menggunakan prinsip-prinsip fisika. Termasuk di dalamnya adalah penyelidikan interior bumi, medan magnet, gravitasi, aliran panas, hingga propagasi gelombang elastis (seismik).</p>
+        </section>
+
+        <!-- Simulasi Gelombang Seismik -->
+        <section>
+            <h2>Simulasi Interaktif: Gelombang Seismik (P & S Wave)</h2>
+            <p>Visualisasi rambatan gelombang primer (P-Wave) yang bersifat kompresional dan gelombang sekunder (S-Wave) yang bersifat transversal melalui medium bawah permukaan.</p>
+            <div class="sim-container">
+                <canvas id="seismicCanvas"></canvas>
+                <div class="controls">
+                    <button onclick="triggerWave('P')">Kirim Gelombang P (Primer)</button>
+                    <button class="secondary" onclick="triggerWave('S')">Kirim Gelombang S (Sekunder)</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Kalkulator Cepat Sederhana (Seismik Refraksi) -->
+        <section>
+            <h2>Kalkulator Estimasi Kedalaman Lapisan (Refraksi Sederhana)</h2>
+            <div class="calc-grid">
+                <div>
+                    <p>Hitung estimasi kedalaman lapisan pertama ($Z_1$) berdasarkan waktu tiba gelombang.</p>
+                    <div class="input-group">
+                        <label>Kecepatan Lapisan 1 ($V_1$ dalam m/s):</label>
+                        <input type="number" id="v1" value="2000">
+                    </div>
+                    <div class="input-group">
+                        <label>Kecepatan Lapisan 2 ($V_2$ dalam m/s):</label>
+                        <input type="number" id="v2" value="4500">
+                    </div>
+                    <div class="input-group">
+                        <label>Waktu Intersep / T_intercept ($t_c$ dalam sekon):</label>
+                        <input type="number" id="tc" value="0.5" step="0.1">
+                    </div>
+                    <button onclick="calculateDepth()">Hitung Kedalaman</button>
+                </div>
+                <div>
+                    <div class="result-box">
+                        <h3>Hasil Perhitungan:</h3>
+                        <p id="calcResult" style="font-size: 1.2rem; color: var(--accent-primary); margin-top: 0.5rem;">Masukkan parameter dan tekan tombol hitung.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Kuis Mini -->
+        <section>
+            <h2>Kuis Kilat Geofisika</h2>
+            <p id="quiz-question">Gelombang seismik manakah yang merambat paling cepat dan tercatat pertama kali pada seismogram?</p>
+            <div class="quiz-options" id="quiz-options">
+                <button class="quiz-btn" onclick="checkAnswer(false)">A. Gelombang Love</button>
+                <button class="quiz-btn" onclick="checkAnswer(true)">B. Gelombang Primer (P-Wave)</button>
+                <button class="quiz-btn" onclick="checkAnswer(false)">C. Gelombang Sekunder (S-Wave)</button>
+                <button class="quiz-btn" onclick="checkAnswer(false)">D. Gelombang Rayleigh</button>
+            </div>
+            <p id="quiz-feedback" style="margin-top: 1rem; font-weight: bold;"></p>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Portal Edukasi Geofisika Indonesia.</p>
+    </footer>
+
+    <script>
+        // Simulasi Canvas Seismik
+        const canvas = document.getElementById('seismicCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let waveType = 'P';
+        let waveActive = false;
+        let waveDistance = 0;
+
+        function resizeCanvas() {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = 250;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        function initParticles() {
+            particles = [];
+            let cols = 40;
+            let rows = 15;
+            let spacingX = canvas.width / cols;
+            let spacingY = canvas.height / rows;
+
+            for (let i = 0; i < cols; i++) {
+                for (let j = 0; j < rows; j++) {
+                    particles.push({
+                        x: i * spacingX + 20,
+                        y: j * spacingY + 20,
+                        baseX: i * spacingX + 20,
+                        baseY: j * spacingY + 20
+                    });
+                }
+            }
+        }
+        initParticles();
+
+        function triggerWave(type) {
+            waveType = type;
+            waveActive = true;
+            waveDistance = 0;
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            if (waveActive) {
+                waveDistance += 4;
+                if (waveDistance > canvas.width + 100) {
+                    waveActive = false;
+                }
+            }
+
+            particles.forEach(p => {
+                let dist = Math.abs(p.baseX - waveDistance);
+                if (waveActive && dist < 100) {
+                    let factor = (100 - dist) / 100;
+                    if (waveType === 'P') {
+                        p.x = p.baseX + Math.sin(waveDistance * 0.1) * 15 * factor;
+                    } else {
+                        p.y = p.baseY + Math.sin(waveDistance * 0.1) * 15 * factor;
+                    }
+                } else {
+                    p.x += (p.baseX - p.x) * 0.1;
+                    p.y += (p.baseY - p.y) * 0.1;
+                }
+
+                ctx.fillStyle = '#38bdf8';
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // Kalkulator Kedalaman
+        function calculateDepth() {
+            let v1 = parseFloat(document.getElementById('v1').value);
+            let v2 = parseFloat(document.getElementById('v2').value);
+            let tc = parseFloat(document.getElementById('tc').value);
+
+            if (v1 >= v2) {
+                document.getElementById('calcResult').innerText = "Error: Kecepatan V2 harus lebih besar dari V1!";
+                return;
+            }
+
+            let z1 = (tc * v1 * v2) / (2 * Math.sqrt((v2 * v2) - (v1 * v1)));
+            document.getElementById('calcResult').innerText = `Estimasi Kedalaman (Z₁): ${z1.toFixed(2)} meter`;
+        }
+
+        // Kuis Logic
+        function checkAnswer(isCorrect) {
+            let feedback = document.getElementById('quiz-feedback');
+            if (isCorrect) {
+                feedback.style.color = '#34d399';
+                feedback.innerText = "Benar! Gelombang Primer (P-Wave) adalah gelombang longitudinal yang memiliki kecepatan rambat paling tinggi.";
+            } else {
+                feedback.style.color = '#f43f5e';
+                feedback.innerText = "Kurang tepat. Coba ingat kembali karakteristik gelombang tubuh (body wave). Jawaban yang benar adalah Gelombang Primer.";
+            }
+        }
+    </script>
+</body>
+</html>
